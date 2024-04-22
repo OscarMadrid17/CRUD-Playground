@@ -19,8 +19,14 @@ Route::view('/welcome',  'welcome')->name('welcome');
 
 // Route::view('/index',  'employee.index')->name('index');
 
-Route::get('/index',    [EmployeeController::class,  'index'])->name('employee.index');
+Route::get('/index',                [EmployeeController::class,  'index'])->name('employee.index');
 
-Route::get('/create',   [EmployeeController::class,  'create'])->name('employee.create');
+Route::get('/create',               [EmployeeController::class,  'create'])->name('employee.create');
 
-Route::post('/create',  [EmployeeController::class,  'store'])->name('employee.store');
+Route::delete('/index/{id}',        [EmployeeController::class,  'destroy'])->name('employee.destroy');
+
+Route::post('/create',              [EmployeeController::class,  'store'])->name('employee.store');
+
+Route::get('/index/{id}/edit',      [EmployeeController::class,  'edit'])->name('employee.edit');
+
+Route::put('/index/{id}/edit',      [EmployeeController::class,  'update'])->name('employee.update');

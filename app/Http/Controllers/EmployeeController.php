@@ -23,14 +23,13 @@ class EmployeeController extends Controller
 
     public function store(Request $request)
     {
-        // $employeeData = request()->all();
         $employeeData =request()->except('_token');
 
         $employeeData = $request -> validate([
 
             'name'          => 'required|string|max:255',
             'middle_name'   => 'required|string|max:255',
-            'email'         => 'required|string|max:255',
+            'email'         => 'required|email|unique:employees,email|max:255',
             'password'      => 'required|min:8'
         ]);
 
@@ -44,35 +43,35 @@ class EmployeeController extends Controller
         return redirect()->route('employee.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Employee $employee)
+    public function edit($id)
     {
-        //
+        $employees = Employee::findOrFail($id);
+        return view('employee.edit', [
+            'employees' =>$employees
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Employee $employee)
+    public function update(Request $employees, $id)
     {
-        //
+        $employees->validate([
+            'name'      =>  'required|string|min:3',
+            'email'     =>  'required|string|email|max:250|unique:employees',
+            'password'  =>  'required|string|min:8|max:250'
+        ]);
+
+        $employees = request()->except(['_token','_method']);
+        Employee::where('id','=',$id)->update($employees);
+
+        $employees = Employee::findOrFail($id);
+        return view('employee.edit',[
+            'employees' => $employees
+        ]);
+
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Employee $employee)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Employee $employee)
-    {
-        //
+        Employee::destroy($id);
+        return redirect()->route('employee.index');
     }
 }
